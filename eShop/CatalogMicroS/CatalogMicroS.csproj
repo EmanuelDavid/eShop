@@ -2,10 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>38263126-1cf9-4c8f-a160-d7f0d94404c5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20181003124355_InitialCreate.cs" />
+    <Compile Remove="Migrations\20181003124355_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20181003125732_Catlog tbl craion.cs" />
+    <Compile Remove="Migrations\20181003125732_Catlog tbl craion.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
   </ItemGroup>
 
 </Project>

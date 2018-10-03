@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{39
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingMicroS", "OrderingMicroS\OrderingMicroS.csproj", "{1D5E7C08-2835-41A1-863B-BD41A3786319}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebClient", "WebClient", "{5C555336-4462-496A-8935-D143AD5E0A4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMvc", "WebMvc\WebMvc.csproj", "{DB6B544C-A7F4-4947-90B4-3A812F524E71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,10 @@ Global
 		{1D5E7C08-2835-41A1-863B-BD41A3786319}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D5E7C08-2835-41A1-863B-BD41A3786319}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D5E7C08-2835-41A1-863B-BD41A3786319}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB6B544C-A7F4-4947-90B4-3A812F524E71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB6B544C-A7F4-4947-90B4-3A812F524E71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB6B544C-A7F4-4947-90B4-3A812F524E71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB6B544C-A7F4-4947-90B4-3A812F524E71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BA4D97F1-33D2-4B0D-B61F-A5286A5DF3FF} = {39CFD398-F8B5-437C-819E-A1DEFB9A97DD}
 		{1D5E7C08-2835-41A1-863B-BD41A3786319} = {39CFD398-F8B5-437C-819E-A1DEFB9A97DD}
+		{DB6B544C-A7F4-4947-90B4-3A812F524E71} = {5C555336-4462-496A-8935-D143AD5E0A4D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4C5598C6-16B4-4B5E-91C0-ADCBD5C5B0BE}
