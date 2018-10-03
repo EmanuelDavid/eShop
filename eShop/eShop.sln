@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogMicroS", "CatalogMic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{39CFD398-F8B5-437C-819E-A1DEFB9A97DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingMicroS", "OrderingMicroS\OrderingMicroS.csproj", "{1D5E7C08-2835-41A1-863B-BD41A3786319}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +19,17 @@ Global
 		{BA4D97F1-33D2-4B0D-B61F-A5286A5DF3FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA4D97F1-33D2-4B0D-B61F-A5286A5DF3FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA4D97F1-33D2-4B0D-B61F-A5286A5DF3FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D5E7C08-2835-41A1-863B-BD41A3786319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D5E7C08-2835-41A1-863B-BD41A3786319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D5E7C08-2835-41A1-863B-BD41A3786319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D5E7C08-2835-41A1-863B-BD41A3786319}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BA4D97F1-33D2-4B0D-B61F-A5286A5DF3FF} = {39CFD398-F8B5-437C-819E-A1DEFB9A97DD}
+		{1D5E7C08-2835-41A1-863B-BD41A3786319} = {39CFD398-F8B5-437C-819E-A1DEFB9A97DD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4C5598C6-16B4-4B5E-91C0-ADCBD5C5B0BE}
