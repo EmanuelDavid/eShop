@@ -1,15 +1,17 @@
-﻿
-namespace CatalogMicroS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CatalogMicroS.DL.Entities
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public class CatalogItem
+    public class CatalogItemEntity
     {
+        [Key]
         public long Id { get; set; }
 
+        [StringLength(50)]
+        [Required]
         public string Name { get; set; }
 
+        [StringLength(250)]
         public string Description { get; set; }
 
         public decimal Price { get; set; }

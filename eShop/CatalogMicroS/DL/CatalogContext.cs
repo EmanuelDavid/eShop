@@ -1,7 +1,7 @@
-﻿using CatalogMicroS.Models;
+﻿using CatalogMicroS.DL.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatalogMicroS
+namespace CatalogMicroS.DL
 {
     public class CatalogContext : DbContext
     {
@@ -10,6 +10,6 @@ namespace CatalogMicroS
 
         }
 
-        public DbSet<CatalogItem> CatalogItems { get; set; }
+        public DbSet<CatalogItemEntity> CatalogItems { get; set; }
     }
 }
