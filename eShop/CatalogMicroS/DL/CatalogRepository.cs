@@ -1,6 +1,7 @@
 ﻿using CatalogMicroS.DL.Entities;
 using CatalogMicroS.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CatalogMicroS.DL
@@ -34,13 +35,35 @@ namespace CatalogMicroS.DL
         {
             //TODO: Check wht sql does this generates
             var entity = await _catalogContext.CatalogItems.SingleOrDefaultAsync(ci => ci.Id == id);
+            if (entity == null)
+            {
+                return null;
+            }
 
             return BuildItem(entity);
         }
 
+        public async Task<List<CatalogItem>> GetAllItems()
+        {
+            var items = _catalogContext.CatalogItems;
+            if (items == null)
+            {
+                return null;
+            }
+
+            var result = new List<CatalogItem>();
+
+            await items.ForEachAsync(
+                item => result.Add(BuildItem(item))
+            );
+
+            return result;
+        }
+
         private CatalogItem BuildItem(CatalogItemEntity entity)
         {
-            return new CatalogItem {
+            return new CatalogItem
+            {
                 Id = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description,

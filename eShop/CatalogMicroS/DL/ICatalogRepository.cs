@@ -1,5 +1,6 @@
 ﻿
 using CatalogMicroS.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CatalogMicroS.DL
@@ -8,5 +9,6 @@ namespace CatalogMicroS.DL
     {
         Task<long> AddItem(CatalogItem model);
         Task<CatalogItem> GetItemById(long id);
+        Task<List<CatalogItem>> GetAllItems();
     }
 }

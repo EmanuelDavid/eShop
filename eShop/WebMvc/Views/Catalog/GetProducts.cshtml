@@ -1,0 +1,13 @@
+﻿@model WebMvc.Models.ViewModels.AllProducts
+@{
+    ViewData["Title"] = "GetProducts";
+}
+
+<h2>Available Products</h2>
+
+@{ foreach (var item in Model.AllCatalogItems)
+    {
+        @item.Name
+    }
+}
+

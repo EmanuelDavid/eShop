@@ -20,7 +20,7 @@ namespace CatalogMicroS.Controllers
         }
 
         [HttpGet]
-        [Route("Item/{id:int}")]
+        [Route("Catalog/Item/{id:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(CatalogItem), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetItemById(long id)
@@ -30,7 +30,7 @@ namespace CatalogMicroS.Controllers
                 return BadRequest();
             }
 
-            var item =  await _catalogRepository.GetItemById(id);
+            var item = await _catalogRepository.GetItemById(id);
 
             if (item != null)
             {
@@ -38,6 +38,26 @@ namespace CatalogMicroS.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("Catalog/AllItems")]
+        [ProducesResponseType(typeof(CatalogItem), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllItems()
+        {
+            var item = await _catalogRepository.GetAllItems();
+            return Ok(item);
+        }
+
+        //POST api/v1/[controller]/items
+        [HttpPost]
+        [Route("Catalog/Item")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> CreateProduct([FromBody]CatalogItem model)
+        {
+            var itemId = await _catalogRepository.AddItem(model);
+
+            return CreatedAtAction("CreateProduct", new { id = itemId }, null);
         }
     }
 }

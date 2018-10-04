@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CatalogMicroS.DL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,8 @@ namespace CatalogMicroS
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<DL.CatalogContext>(option => option.UseSqlServer(Configuration.GetConnectionString("Default")));
+            //register interfaces to DI
+            services.AddScoped<ICatalogRepository, CatalogRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
