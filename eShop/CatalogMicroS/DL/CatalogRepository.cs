@@ -30,7 +30,6 @@ namespace CatalogMicroS.DL
             return item.Id;
         }
 
-
         public async Task<CatalogItem> GetItemById(long id)
         {
             //TODO: Check wht sql does this generates

@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogMicroS", "CatalogMicroS\CatalogMicroS.csproj", "{BA4D97F1-33D2-4B0D-B61F-A5286A5DF3FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogMicroS", "CatalogMicroS\CatalogMicroS.csproj", "{BA4D97F1-33D2-4B0D-B61F-A5286A5DF3FF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{39CFD398-F8B5-437C-819E-A1DEFB9A97DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingMicroS", "OrderingMicroS\OrderingMicroS.csproj", "{1D5E7C08-2835-41A1-863B-BD41A3786319}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingMicroS", "OrderingMicroS\OrderingMicroS.csproj", "{1D5E7C08-2835-41A1-863B-BD41A3786319}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebClient", "WebClient", "{5C555336-4462-496A-8935-D143AD5E0A4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMvc", "WebMvc\WebMvc.csproj", "{DB6B544C-A7F4-4947-90B4-3A812F524E71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMvc", "WebMvc\WebMvc.csproj", "{DB6B544C-A7F4-4947-90B4-3A812F524E71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusRabbitMQ", "EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{0A30F009-A5A0-4DDA-A2AC-8A07D0FB49AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{DB6B544C-A7F4-4947-90B4-3A812F524E71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB6B544C-A7F4-4947-90B4-3A812F524E71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB6B544C-A7F4-4947-90B4-3A812F524E71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A30F009-A5A0-4DDA-A2AC-8A07D0FB49AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A30F009-A5A0-4DDA-A2AC-8A07D0FB49AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A30F009-A5A0-4DDA-A2AC-8A07D0FB49AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A30F009-A5A0-4DDA-A2AC-8A07D0FB49AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

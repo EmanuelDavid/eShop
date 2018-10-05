@@ -1,5 +1,4 @@
-﻿
-using CatalogMicroS.Models;
+﻿using CatalogMicroS.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
