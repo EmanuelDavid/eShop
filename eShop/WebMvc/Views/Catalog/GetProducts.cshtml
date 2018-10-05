@@ -2,12 +2,45 @@
 @{
     ViewData["Title"] = "GetProducts";
 }
+<div id="mainDiv">
+    <a asp-action="AddProduct" id="addNewProduct">Add new product</a>
+    <table id="customers">
+        <caption>Available Products</caption>>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AllCatalogItems[0].Name)
+                </th>>
+                <th>
+                    @Html.DisplayNameFor(model => model.AllCatalogItems[0].Description)
+                </th>>
+                <th>
+                    @Html.DisplayNameFor(model => model.AllCatalogItems[0].Price)
+                </th>>
+                <th>
+                    @Html.DisplayNameFor(model => model.AllCatalogItems[0].AvailableStock)
+                </th>>
+            </tr>
+        </thead>
+        @{ foreach (var item in Model.AllCatalogItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AvailableStock)
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
 
-<h2>Available Products</h2>
-
-@{ foreach (var item in Model.AllCatalogItems)
-    {
-        @item.Name
-    }
-}
 

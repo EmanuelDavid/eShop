@@ -1,0 +1,22 @@
+﻿@model CatalogItem
+
+
+<div class="col-md-6">
+    <h2>Add new product</h2>
+    <form asp-controller="Catalog" asp-action="AddProduct">
+        <label asp-for="@Model.Name"></label>
+        <input asp-for="@Model.Name" />
+        <br>
+        <label asp-for="@Model.Description"></label>
+        <input asp-for="@Model.Description" />
+        <br>
+
+        <label asp-for="@Model.Price"></label>
+        <input asp-for="@Model.Price" />
+        <br>
+
+        <label asp-for="@Model.AvailableStock"></label>
+        <input asp-for="@Model.AvailableStock" />
+        <input type="submit">
+    </form>
+</div>

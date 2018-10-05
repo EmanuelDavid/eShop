@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using WebMvc.Models;
 using WebMvc.Models.ViewModels;
 using WebMvc.Services;
 
@@ -27,6 +25,27 @@ namespace WebMvc.Controllers
             };
 
             return View(vm);
+        }
+
+        public IActionResult AddProduct()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddProduct(CatalogItem model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _catalogSvc.Add(model);
+                if(result.StatusCode == System.Net.HttpStatusCode.Created)
+                {
+                    return RedirectToAction("GetProducts");
+                }
+            }
+
+            return View(model);
         }
     }
 }

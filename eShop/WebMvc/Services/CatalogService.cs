@@ -18,22 +18,24 @@ namespace WebMvc.Services
 
         public async Task<List<CatalogItem>> GetCatalogItems()
         {
-            var uri = $"{BASE_URL}/Catalog/AllItems";
+            var url = $"{BASE_URL}/Catalog/AllItems";
 
-            var responseString = await _httpClient.GetStringAsync(uri);
+            var responseString = await _httpClient.GetStringAsync(url);
 
             var catalog = JsonConvert.DeserializeObject<List<CatalogItem>>(responseString);
 
             return catalog;
         }
 
-        public async Task<string> Add()
+        public async Task<HttpResponseMessage> Add(CatalogItem model)
         {
-            var uri = BASE_URL + "Catalog/Item/1";
+            var url = $"{BASE_URL}/Catalog/Item";
 
-            var responseString = await _httpClient.GetStringAsync(uri);
+            var content = new StringContent(JsonConvert.SerializeObject(model), System.Text.Encoding.UTF8, "application/json");
 
-            return responseString;
+            var response = await _httpClient.PostAsync(url, content);
+
+            return response;
         }
     }
 }

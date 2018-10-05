@@ -55,12 +55,14 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li>@Html.ActionLink("Get All Products", "GetProducts", "Catalog")</li>
+        <h2>
+            @*classic .net way to do anchors
+            @Html.ActionLink("Get All Products", "GetProducts", "Catalog")
 
-            <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
+            core tag helpers*@
+            <a asp-controller="Catalog"
+               asp-action="GetProducts">Get All Products</a>
+        </h2>
+
     </div>
 </div>
