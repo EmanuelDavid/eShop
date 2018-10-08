@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CatalogMicroS.DL;
+﻿using CatalogMicroS.DL;
+using EventBusRabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
 
 namespace CatalogMicroS
 {
@@ -38,6 +35,37 @@ namespace CatalogMicroS
             services.AddDbContext<DL.CatalogContext>(option => option.UseSqlServer(Configuration.GetConnectionString("Default")));
             //register interfaces to DI
             services.AddScoped<ICatalogRepository, CatalogRepository>();
+
+
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBusConnection"]
+                };
+
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
+                {
+                    retryCount = int.Parse(Configuration["EventBusRetryCount"]);
+                }
+
+                return new DefaultRabbitMQPersistentConnection(factory, retryCount);
+            });
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.RabbitMQ>(sp =>
+            {
+                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
+                {
+                    retryCount = int.Parse(Configuration["EventBusRetryCount"]);
+                }
+                var subscriptionClientName = Configuration["SubscriptionClientName"];
+
+                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, subscriptionClientName, retryCount);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

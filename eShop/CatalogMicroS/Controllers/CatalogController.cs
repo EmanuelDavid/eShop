@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using CatalogMicroS.Models;
 using System.Net;
 using CatalogMicroS.DL;
+using EventBusRabbitMQ;
 
 namespace CatalogMicroS.Controllers
 {
     public class CatalogController : Controller
     {
         ICatalogRepository _catalogRepository;
+        readonly IRabbitMQPersistentConnection _persistentConnection;
 
-        public CatalogController(ICatalogRepository repository)
+        public CatalogController(ICatalogRepository repository, IRabbitMQPersistentConnection persistentConnection)
         {
             _catalogRepository = repository;
+            _persistentConnection = persistentConnection;
         }
 
         [HttpGet]
@@ -25,7 +28,11 @@ namespace CatalogMicroS.Controllers
             {
                 return BadRequest();
             }
+            //talk to other service
 
+            EventBusRabbitMQ.RabbitMQ eventBus = new EventBusRabbitMQ.RabbitMQ(_persistentConnection, "numeleCozii");
+            eventBus.Publish("ca sa vezi merge!");
+            //talk to other service
             var item = await _catalogRepository.GetItemById(id);
 
             if (item != null)

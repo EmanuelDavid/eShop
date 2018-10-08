@@ -9,12 +9,12 @@ using Newtonsoft.Json;
 
 namespace EventBusRabbitMQ
 {
-    public class RabbitMQ
+    public class RabbitMQ : IEventBus
     {
         private readonly IRabbitMQPersistentConnection _persistentConnection;
         private IModel _consumerChannel;
         private string _queueName;
-        const string BROKER_NAME = "eshop_event_bus";
+        const string EXCHANGE_NAME = "eshop_event_bus";
         private readonly int _retryCount;
 
         public RabbitMQ(IRabbitMQPersistentConnection persistentConnection, string queueName = null, int retryCount = 5)
@@ -34,7 +34,7 @@ namespace EventBusRabbitMQ
 
             var channel = _persistentConnection.CreateModel();
 
-            channel.ExchangeDeclare(exchange: BROKER_NAME,
+            channel.ExchangeDeclare(exchange: EXCHANGE_NAME,
                                  type: "direct");
 
             channel.QueueDeclare(queue: _queueName,
@@ -65,6 +65,7 @@ namespace EventBusRabbitMQ
 
             return channel;
         }
+
         public void Publish(string @event)
         {
             if (!_persistentConnection.IsConnected)
@@ -78,10 +79,9 @@ namespace EventBusRabbitMQ
 
             using (var channel = _persistentConnection.CreateModel())
             {
-                var eventName = @event.GetType()
-                    .Name;
+                var eventKey = "black";
 
-                channel.ExchangeDeclare(exchange: BROKER_NAME,
+                channel.ExchangeDeclare(exchange: EXCHANGE_NAME,
                                     type: "direct");
 
                 var message = JsonConvert.SerializeObject(@event);
@@ -90,10 +90,10 @@ namespace EventBusRabbitMQ
                 policy.Execute(() =>
                 {
                     var properties = channel.CreateBasicProperties();
-                    properties.DeliveryMode = 2; // persistent
+                    properties.Persistent = true;
 
-                    channel.BasicPublish(exchange: BROKER_NAME,
-                                     routingKey: eventName,
+                    channel.BasicPublish(exchange: EXCHANGE_NAME,
+                                     routingKey: eventKey,
                                      mandatory: true,
                                      basicProperties: properties,
                                      body: body);
