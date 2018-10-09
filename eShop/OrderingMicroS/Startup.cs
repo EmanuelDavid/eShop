@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EventBusRabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
 
 namespace OrderingMicroS
 {
@@ -33,6 +30,30 @@ namespace OrderingMicroS
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBusConnection"]
+                };
+
+                var retryCount = 2;
+
+                return new DefaultRabbitMQPersistentConnection(factory, retryCount);
+            });
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.RabbitMQ>(sp =>
+            {
+                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+
+                var retryCount = 2;
+
+                var subscriptionClientName = Configuration["SubscriptionClientName"];
+
+                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ShowOrders), subscriptionClientName, retryCount);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +79,14 @@ namespace OrderingMicroS
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe("Catalog");
+        }
+
+        private void ShowOrders(string message)
+        {
+            string result =  "Ya here we are with orders super";
         }
     }
 }

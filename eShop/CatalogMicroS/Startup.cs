@@ -13,6 +13,8 @@ namespace CatalogMicroS
 {
     public class Startup
     {
+        private IEventBus _eventBus;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -64,13 +66,15 @@ namespace CatalogMicroS
                 }
                 var subscriptionClientName = Configuration["SubscriptionClientName"];
 
-                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, subscriptionClientName, retryCount);
+                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ShowCatalogResults), subscriptionClientName, retryCount);
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            _eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -91,6 +95,16 @@ namespace CatalogMicroS
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            _eventBus.Subscribe("Order");
+        }
+
+        private void ShowCatalogResults(string message)
+        {
+            if(message.Contains("GetAllItems", System.StringComparison.OrdinalIgnoreCase))
+            {
+                _eventBus.Publish("Here are all the items@", "Catalog");
+            }
         }
     }
 }

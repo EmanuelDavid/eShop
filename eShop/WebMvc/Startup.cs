@@ -33,6 +33,7 @@ namespace WebMvc
             //register interfaces to DI
             services.AddScoped<ICatalogService, CatalogService>();
             services.AddSingleton<HttpClient>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

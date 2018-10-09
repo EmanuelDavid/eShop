@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 
 namespace EventBusRabbitMQ
 {
+    public delegate void ProcessResult(string resultMessage);
+
     public class RabbitMQ : IEventBus
     {
         private readonly IRabbitMQPersistentConnection _persistentConnection;
@@ -16,13 +18,15 @@ namespace EventBusRabbitMQ
         private string _queueName;
         const string EXCHANGE_NAME = "eshop_event_bus";
         private readonly int _retryCount;
+        public ProcessResult _processResult;
 
-        public RabbitMQ(IRabbitMQPersistentConnection persistentConnection, string queueName = null, int retryCount = 5)
+        public RabbitMQ(IRabbitMQPersistentConnection persistentConnection, ProcessResult processResult, string queueName = null, int retryCount = 5)
         {
             _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
             _queueName = queueName;
             _consumerChannel = CreateConsumerChannel();
             _retryCount = retryCount;
+            _processResult = processResult;
         }
 
         private IModel CreateConsumerChannel()
@@ -43,12 +47,12 @@ namespace EventBusRabbitMQ
                                  autoDelete: false,
                                  arguments: null);
 
-
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
                 var message = Encoding.UTF8.GetString(ea.Body);
-                Console.WriteLine(" [x] Received {0}", message);
+
+                _processResult(message);
 
                 channel.BasicAck(ea.DeliveryTag, multiple: false);
             };
@@ -66,7 +70,7 @@ namespace EventBusRabbitMQ
             return channel;
         }
 
-        public void Publish(string @event)
+        public void Publish(string @event, string routingKey)
         {
             if (!_persistentConnection.IsConnected)
             {
@@ -79,8 +83,6 @@ namespace EventBusRabbitMQ
 
             using (var channel = _persistentConnection.CreateModel())
             {
-                var eventKey = "black";
-
                 channel.ExchangeDeclare(exchange: EXCHANGE_NAME,
                                     type: "direct");
 
@@ -93,11 +95,26 @@ namespace EventBusRabbitMQ
                     properties.Persistent = true;
 
                     channel.BasicPublish(exchange: EXCHANGE_NAME,
-                                     routingKey: eventKey,
+                                     routingKey: routingKey,
                                      mandatory: true,
                                      basicProperties: properties,
                                      body: body);
                 });
+            }
+        }
+
+        public void Subscribe(string routingKey)
+        {
+            if (!_persistentConnection.IsConnected)
+            {
+                _persistentConnection.TryConnect();
+            }
+
+            using (var channel = _persistentConnection.CreateModel())
+            {
+                channel.QueueBind(queue: _queueName,
+                                  exchange: EXCHANGE_NAME,
+                                  routingKey: routingKey);
             }
         }
     }

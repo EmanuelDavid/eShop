@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using EventBusRabbitMQ;
 using Microsoft.AspNetCore.Mvc;
 using OrderingMicroS.Models;
 
@@ -10,8 +7,18 @@ namespace OrderingMicroS.Controllers
 {
     public class HomeController : Controller
     {
+        readonly IEventBus _eventBus;
+
+        public HomeController(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
         public IActionResult Index()
         {
+            //get all catalog items, to know what to order
+
+            _eventBus.Publish("GetAllItems", "Order");
+
             return View();
         }
 
