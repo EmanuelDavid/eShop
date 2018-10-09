@@ -1,5 +1,6 @@
 ﻿using CatalogMicroS.DL;
 using EventBusRabbitMQ;
+using Events.EventBusRabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,13 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
+using System.Threading.Tasks;
 
 namespace CatalogMicroS
 {
     public class Startup
     {
         private IEventBus _eventBus;
+        private ICatalogRepository _catalogRepository;
 
         public Startup(IConfiguration configuration)
         {
@@ -66,14 +70,15 @@ namespace CatalogMicroS
                 }
                 var subscriptionClientName = Configuration["SubscriptionClientName"];
 
-                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ShowCatalogResults), subscriptionClientName, retryCount);
+                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ProcessTheResult), subscriptionClientName, retryCount);
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IEventBus eventBus, ICatalogRepository repository)
         {
-            _eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            _eventBus = eventBus;
+            _catalogRepository = repository;
 
             if (env.IsDevelopment())
             {
@@ -99,11 +104,18 @@ namespace CatalogMicroS
             _eventBus.Subscribe("Order");
         }
 
-        private void ShowCatalogResults(string message)
+        private async Task ProcessTheResult(string message)
         {
-            if(message.Contains("GetAllItems", System.StringComparison.OrdinalIgnoreCase))
+            dynamic json = JsonConvert.DeserializeObject(message);
+
+            int actionValue = json.Action;
+
+            Action enumResult = (Action)actionValue;
+
+            if (enumResult == Action.GetAll)
             {
-                _eventBus.Publish("Here are all the items@", "Catalog");
+                var jsonToBe = await _catalogRepository.GetAllItems();
+                _eventBus.Publish(jsonToBe, "Catalog");
             }
         }
     }

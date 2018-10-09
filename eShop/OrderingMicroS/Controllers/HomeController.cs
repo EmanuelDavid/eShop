@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using EventBusRabbitMQ;
+using Events.EventBusRabbitMQ;
 using Microsoft.AspNetCore.Mvc;
 using OrderingMicroS.Models;
 
@@ -16,8 +17,11 @@ namespace OrderingMicroS.Controllers
         public IActionResult Index()
         {
             //get all catalog items, to know what to order
-
-            _eventBus.Publish("GetAllItems", "Order");
+            GetCatalogItems jsonToBe = new GetCatalogItems
+            {
+                Action = Action.GetAll
+            };
+           _eventBus.Publish(jsonToBe, "Order");
 
             return View();
         }

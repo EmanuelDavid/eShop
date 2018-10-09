@@ -70,7 +70,7 @@ namespace EventBusRabbitMQ
             return channel;
         }
 
-        public void Publish(string @event, string routingKey)
+        public void Publish(object @event, string routingKey)
         {
             if (!_persistentConnection.IsConnected)
             {

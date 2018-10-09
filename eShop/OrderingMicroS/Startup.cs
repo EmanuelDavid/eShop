@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 
 namespace OrderingMicroS
@@ -52,7 +53,7 @@ namespace OrderingMicroS
 
                 var subscriptionClientName = Configuration["SubscriptionClientName"];
 
-                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ShowOrders), subscriptionClientName, retryCount);
+                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ProcessTheResult), subscriptionClientName, retryCount);
             });
         }
 
@@ -84,9 +85,11 @@ namespace OrderingMicroS
             eventBus.Subscribe("Catalog");
         }
 
-        private void ShowOrders(string message)
+        private void ProcessTheResult(string message)
         {
-            string result =  "Ya here we are with orders super";
+            dynamic json = JsonConvert.DeserializeObject(message);
+
+            int actionValue = json.Action;
         }
     }
 }
