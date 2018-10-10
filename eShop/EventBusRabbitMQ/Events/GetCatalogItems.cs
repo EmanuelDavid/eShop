@@ -1,5 +1,5 @@
 ﻿
-namespace Events.EventBusRabbitMQ
+namespace EventBusRabbitMQ.Events
 {
     public class GetCatalogItems
     {

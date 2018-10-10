@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using EventBusRabbitMQ;
-using Events.EventBusRabbitMQ;
+using EventBusRabbitMQ.Events;
 using Microsoft.AspNetCore.Mvc;
 using OrderingMicroS.Models;
 
@@ -21,7 +21,7 @@ namespace OrderingMicroS.Controllers
             {
                 Action = Action.GetAll
             };
-           _eventBus.Publish(jsonToBe, "Order");
+           _eventBus.Publish(jsonToBe, "Catalog");
 
             return View();
         }

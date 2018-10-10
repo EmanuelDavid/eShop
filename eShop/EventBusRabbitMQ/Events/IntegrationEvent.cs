@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Events.EventBusRabbitMQ
+namespace EventBusRabbitMQ.Events
 {
     public interface IntegrationEvent
     {

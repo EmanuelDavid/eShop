@@ -1,6 +1,6 @@
 ﻿using CatalogMicroS.DL;
 using EventBusRabbitMQ;
-using Events.EventBusRabbitMQ;
+using EventBusRabbitMQ.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using System.Threading.Tasks;
 
 namespace CatalogMicroS
 {
@@ -68,9 +67,9 @@ namespace CatalogMicroS
                 {
                     retryCount = int.Parse(Configuration["EventBusRetryCount"]);
                 }
-                var subscriptionClientName = Configuration["SubscriptionClientName"];
+                var queueName = Configuration["QueueName"];
 
-                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ProcessTheResult), subscriptionClientName, retryCount);
+                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ProcessTheResult), queueName, retryCount);
             });
         }
 
@@ -101,10 +100,10 @@ namespace CatalogMicroS
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            _eventBus.Subscribe("Order");
+            _eventBus.Subscribe("Catalog");
         }
 
-        private async Task ProcessTheResult(string message)
+        private void ProcessTheResult(string message)
         {
             dynamic json = JsonConvert.DeserializeObject(message);
 
@@ -114,8 +113,8 @@ namespace CatalogMicroS
 
             if (enumResult == Action.GetAll)
             {
-                var jsonToBe = await _catalogRepository.GetAllItems();
-                _eventBus.Publish(jsonToBe, "Catalog");
+                var jsonToBe = "Name:Touran";//await _catalogRepository.GetAllItems();
+                _eventBus.Publish(jsonToBe, "Order");
             }
         }
     }

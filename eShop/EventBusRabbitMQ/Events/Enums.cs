@@ -1,4 +1,4 @@
-﻿namespace Events.EventBusRabbitMQ
+﻿namespace EventBusRabbitMQ.Events
 {
     public enum Action
     {

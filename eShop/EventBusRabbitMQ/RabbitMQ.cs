@@ -47,6 +47,8 @@ namespace EventBusRabbitMQ
                                  autoDelete: false,
                                  arguments: null);
 
+            //_queueName = channel.QueueDeclare().QueueName;
+
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
@@ -103,7 +105,7 @@ namespace EventBusRabbitMQ
             }
         }
 
-        public void Subscribe(string routingKey)
+        public void Subscribe(string bindingKey)
         {
             if (!_persistentConnection.IsConnected)
             {
@@ -112,9 +114,10 @@ namespace EventBusRabbitMQ
 
             using (var channel = _persistentConnection.CreateModel())
             {
+                //if routingKey from publish == bindingKey from binding you get the message
                 channel.QueueBind(queue: _queueName,
                                   exchange: EXCHANGE_NAME,
-                                  routingKey: routingKey);
+                                  routingKey: bindingKey);
             }
         }
     }

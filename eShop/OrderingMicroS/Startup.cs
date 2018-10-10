@@ -51,9 +51,9 @@ namespace OrderingMicroS
 
                 var retryCount = 2;
 
-                var subscriptionClientName = Configuration["SubscriptionClientName"];
+                var queueName = Configuration["QueueName"];
 
-                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ProcessTheResult), subscriptionClientName, retryCount);
+                return new EventBusRabbitMQ.RabbitMQ(rabbitMQPersistentConnection, new ProcessResult(ProcessTheResult), queueName, retryCount);
             });
         }
 
@@ -82,14 +82,14 @@ namespace OrderingMicroS
             });
 
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe("Catalog");
+            eventBus.Subscribe("Order");
         }
 
         private void ProcessTheResult(string message)
         {
             dynamic json = JsonConvert.DeserializeObject(message);
 
-            int actionValue = json.Action;
+            //int actionValue = json.Name;
         }
     }
 }
