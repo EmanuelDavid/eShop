@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using System.Threading.Tasks;
 
 namespace OrderingMicroS
 {
@@ -85,11 +86,14 @@ namespace OrderingMicroS
             eventBus.Subscribe("Order");
         }
 
-        private void ProcessTheResult(string message)
+        private async Task ProcessTheResult(string message)
         {
             dynamic json = JsonConvert.DeserializeObject(message);
 
             //int actionValue = json.Name;
+
+            var task = Task.Run(() => 1);
+            await task;
         }
     }
 }

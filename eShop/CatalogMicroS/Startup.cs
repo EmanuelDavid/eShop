@@ -10,13 +10,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using System.Threading.Tasks;
 
 namespace CatalogMicroS
 {
     public class Startup
     {
         private IEventBus _eventBus;
-        private ICatalogRepository _catalogRepository;
+        private IServiceScopeFactory _scopeFactory;
 
         public Startup(IConfiguration configuration)
         {
@@ -37,7 +38,7 @@ namespace CatalogMicroS
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<DL.CatalogContext>(option => option.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<CatalogContext>(option => option.UseSqlServer(Configuration.GetConnectionString("Default")));
             //register interfaces to DI
             services.AddScoped<ICatalogRepository, CatalogRepository>();
 
@@ -74,10 +75,9 @@ namespace CatalogMicroS
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IEventBus eventBus, ICatalogRepository repository)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IEventBus eventBus)
         {
             _eventBus = eventBus;
-            _catalogRepository = repository;
 
             if (env.IsDevelopment())
             {
@@ -101,9 +101,12 @@ namespace CatalogMicroS
             });
 
             _eventBus.Subscribe("Catalog");
+
+            var provider = app.ApplicationServices;
+            _scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
         }
 
-        private void ProcessTheResult(string message)
+        private async Task ProcessTheResult(string message)
         {
             dynamic json = JsonConvert.DeserializeObject(message);
 
@@ -113,8 +116,13 @@ namespace CatalogMicroS
 
             if (enumResult == Action.GetAll)
             {
-                var jsonToBe = "Name:Touran";//await _catalogRepository.GetAllItems();
-                _eventBus.Publish(jsonToBe, "Order");
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var catalogRepository = scope.ServiceProvider.GetRequiredService<ICatalogRepository>();
+                    var jsonToBe = await catalogRepository.GetAllItems();
+
+                    _eventBus.Publish(jsonToBe, "Order");
+                }
             }
         }
     }

@@ -16,19 +16,17 @@ namespace OrderingMicroS.Controllers
         }
         public IActionResult Index()
         {
-            //get all catalog items, to know what to order
-            GetCatalogItems jsonToBe = new GetCatalogItems
-            {
-                Action = Action.GetAll
-            };
-           _eventBus.Publish(jsonToBe, "Catalog");
-
             return View();
         }
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            //get all catalog items, to know what to order
+            GetCatalogItems jsonToBe = new GetCatalogItems
+            {
+                Action = Action.GetAll
+            };
+            _eventBus.Publish(jsonToBe, "Catalog");
 
             return View();
         }

@@ -6,10 +6,11 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace EventBusRabbitMQ
 {
-    public delegate void ProcessResult(string resultMessage);
+    public delegate Task ProcessResult(string resultMessage);
 
     public class RabbitMQ : IEventBus
     {
@@ -41,20 +42,15 @@ namespace EventBusRabbitMQ
             channel.ExchangeDeclare(exchange: EXCHANGE_NAME,
                                  type: "direct");
 
-            channel.QueueDeclare(queue: _queueName,
-                                 durable: true,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
 
-            //_queueName = channel.QueueDeclare().QueueName;
+            _queueName = channel.QueueDeclare().QueueName;
 
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
                 var message = Encoding.UTF8.GetString(ea.Body);
 
-                _processResult(message);
+                _processResult(message).Wait();
 
                 channel.BasicAck(ea.DeliveryTag, multiple: false);
             };
